@@ -51,7 +51,7 @@ def estadoComando(linha, i):
     else:
         raise ValueError(f"Token inválido: {cmd}")
 
-def parse_expressao(linha):
+def parseExpressao(linha):
     tokens = []
     i = 0
     while i < len(linha):
@@ -75,20 +75,20 @@ def parse_expressao(linha):
     return tokens
 
 # Testes
-def test_parse_expressao():
-    assert parse_expressao("3.14 + 2 * (1 - 5)") == ['3.14', '+', '2', '*', '(', '1', '-', '5', ')']
-    assert parse_expressao("RES MEM") == ['RES', 'MEM']
+def testeParseExpressao():
+    assert parseExpressao("3.14 + 2 * (1 - 5)") == ['3.14', '+', '2', '*', '(', '1', '-', '5', ')']
+    assert parseExpressao("RES MEM") == ['RES', 'MEM']
     try:
-        parse_expressao("3.14.5 + 2")
+        parseExpressao("3.14.5 + 2")
     except ValueError as e:
         assert str(e) == "Número malformado: 3.14.5"
-    try:        parse_expressao("3.14 + @")
+    try:        parseExpressao("3.14 + @")
     except ValueError as e:
         assert str(e) == "Token inválido: @"
     print("Todos os testes passaram!")
     
 if __name__ == "__main__": 
-    test_parse_expressao()
+    testeParseExpressao()
 
 
 
