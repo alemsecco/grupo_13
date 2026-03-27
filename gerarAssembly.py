@@ -1,5 +1,5 @@
 def gerarAssembly(todas_linhas_rpn):
-    # Seção de Dados (Memória RAM)
+    # seção de dados (memória RAM)
     data_section = [
         ".data",
         "    @ --- Variaveis e Constantes ---",
@@ -7,7 +7,7 @@ def gerarAssembly(todas_linhas_rpn):
         "    historico: .space 400              @ Espaco para 100 resultados"
     ]
     
-    # Seção de Texto
+    # seção de texto
     text_section = [
         ".text",
         ".global _start",
@@ -18,7 +18,7 @@ def gerarAssembly(todas_linhas_rpn):
     contador_loops = 0  # criar nomes de loops únicos para a potência
     variaveis_criadas = set()
     
-    # Operações básicas suportadas nativamente
+    # operações básicas suportadas nativamente
     mapa_instrucoes = {'+': 'vadd.f64', '-': 'vsub.f64', '*': 'vmul.f64', '/': 'vdiv.f64'}
 
     for numero_linha, tokens in enumerate(todas_linhas_rpn, start=0):
@@ -28,7 +28,7 @@ def gerarAssembly(todas_linhas_rpn):
             if token in ['(', ')']: 
                 continue
 
-            # 1. NÚMERO
+            # NÚMERO
             if token.lstrip('-').replace('.', '', 1).isdigit():
                 nome_const = f"num_{contador_numeros}"
                 data_section.append(f"    {nome_const}: .double {token}")
@@ -38,7 +38,7 @@ def gerarAssembly(todas_linhas_rpn):
                 text_section.append(f"    vpush {{s0}}")
                 contador_numeros += 1
 
-            # 2. OPERAÇÕES BÁSICAS (+, -, *, /)
+            # OPERAÇÕES BÁSICAS (+, -, *, /)
             elif token in mapa_instrucoes:
                 inst = mapa_instrucoes[token]
                 text_section.extend([
@@ -48,7 +48,7 @@ def gerarAssembly(todas_linhas_rpn):
                     f"    vpush {{s2}}              @ Devolve pra pilha"
                 ])
 
-            # 3. DIVISÃO INTEIRA (//)
+            # DIVISÃO INTEIRA (//)
             elif token == '//':
                 text_section.extend([
                     "    @ --- Divisao Inteira (//) ---",
@@ -60,7 +60,7 @@ def gerarAssembly(todas_linhas_rpn):
                     "    vpush {s2}"
                 ])
 
-            # 4. RESTO DA DIVISÃO (%)
+            # RESTO DA DIVISÃO (%)
             elif token == '%':
                 text_section.extend([
                     "    @ --- Resto (%) ---",
@@ -74,7 +74,7 @@ def gerarAssembly(todas_linhas_rpn):
                     "    vpush {s2}"
                 ])
 
-            # 5. POTENCIAÇÃO (^)
+            # POTENCIAÇÃO (^)
             elif token == '^':
                 loop_id = contador_loops
                 contador_loops += 1
@@ -95,7 +95,7 @@ def gerarAssembly(todas_linhas_rpn):
                     "    vpush {s2}              @ Guarda o resultado"
                 ])
 
-            # 6. COMANDO RES (Histórico)
+            # COMANDO RES (histórico)
             elif token == "RES":
                 text_section.extend([
                     "    @ --- Comando RES ---",
@@ -112,14 +112,14 @@ def gerarAssembly(todas_linhas_rpn):
                     "    vpush {s0}"
                 ])
 
-            # 7. COMANDO MEM (Variáveis)
+            # COMANDO MEM (variáveis)
             elif token.isupper() or (token.isalpha() and len(token) == 1):
                 nome_var = f"var_{token}"
                 if nome_var not in variaveis_criadas:
                     data_section.append(f"    {nome_var}: .float 0.0")
                     variaveis_criadas.add(nome_var)
                 
-                # Se for o último token da linha, é salvar. Se não, é ler.
+                # se for o último token da linha, é salvar. se não, é ler.
                 if i == len(tokens) - 1 and len(tokens) > 1 and tokens[i-1] not in ['(', ')']:
                     text_section.extend([
                         f"    vpop {{s0}}               @ Pega valor para salvar",
@@ -134,7 +134,7 @@ def gerarAssembly(todas_linhas_rpn):
                         f"    vpush {{s0}}"
                     ])
 
-        # --- FIM DA LINHA: Salva resultado no historico ---
+        # FIM DA LINHA: salva resultado no historico
         text_section.extend([
             "    @ --- Salva no historico ---",
             "    vpop {s0}                   @ Pega resultado final",
@@ -149,7 +149,7 @@ def gerarAssembly(todas_linhas_rpn):
             "    str r2, [r1]                "
         ])
 
-    # Encerra o programa
+    # encerra o programa
     text_section.extend([
         "\n    @ --- Fim do Programa ---",
         "    mov r7, #1                  @ Syscall exit",
