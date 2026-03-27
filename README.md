@@ -13,6 +13,9 @@ O projeto possui essencialmente quatro partes.
     - Números reais, usando ponto como separador decimal;
     - Operadores (+, -, *, /, %, ^);
     - Comandos especiais (RES, MEM) e parênteses;
+    - Números reais, usando ponto como separador decimal;
+    - Operadores (+, -, *, /, %, ^);
+    - Comandos especiais (RES, MEM) e parênteses;
 4. Detecção de erros (números malformados, tokens inválidos)
 5. Implementação de funções de teste para o analisador léxico, cobrindo entradas válidas e inválidas
 
