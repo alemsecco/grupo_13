@@ -1,0 +1,21 @@
+EXPRESSÃO: 3.14 + 2 * (1 - 5)
+Teste expressão válida: OK
+EXPRESSÃO: RES MEM
+Teste comandos RES/MEM: OK
+EXPRESSÃO: RES VAR
+Teste nome de memória qualquer: OK
+EXPRESSÃO: res var
+Teste rejeição de minúsculas: OK
+EXPRESSÃO: 3.14.5 + 2
+Teste número malformado: OK
+EXPRESSÃO: 3.14 + @
+Teste token inválido: OK
+EXPRESSÃO: ((3 + 2) + (1 - 5)
+Teste parênteses não balanceados: OK
+EXPRESSÃO: 3 + 2)
+Teste parêntese extra fechado: OK
+EXPRESSÃO: 3 + * 4
+Teste operadores consecutivos: OK
+EXPRESSÃO: 3 4
+Teste operandos consecutivos: OK
+Todos os testes passaram!
