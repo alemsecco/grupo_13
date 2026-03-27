@@ -60,44 +60,48 @@ def executar_expressao(tokens, memoria, historico):
             if not historico:
                 raise ValueError("Erro! Não há histórico")
 
-            if len(pilha) >= 1:
-                n = int(pilha.pop())
-                if n <= 0 or n > len(historico):
-                    raise ValueError("Erro! Índice inválido")
-                pilha.append(historico[-n])
-            else:
-                pilha.append(historico[-1])
-
+            if len(pilha) < 1:
+                raise ValueError("Erro! RES precisa de um númer N anterior")
+            
+            n = int(pilha.pop())
+            if n <= 0 or n > len(historico):
+                raise ValueError("Erro! Índice inválido")
+                
+            pilha.append(historico[-n])
             continue
 
         # variável
-        elif token.isalpha() and len(token) == 1:
+        elif token.isupper() or (token.isalpha() and len(token) == 1):
+
             if i + 1 < len(tokens) and tokens[i + 1] == "MEM":
                 continue
 
-            if token not in memoria:
-                raise ValueError(f"Erro! Variável '{token}' não definida")
+            if i ==  len(tokens) - 1 and len(pilha) >= 1:
+                valor = pilha.pop()
+                memoria[token] = valor
+                pilha.append(valor)
 
-            pilha.append(memoria[token])
+            else:
+                if token not in memoria:
+                    pilha.append(0.0)
+                else:
+                    pilha.append(memoria[token])
             continue
 
-        else:
-            raise ValueError(f"Token inválido: {token}")
+        raise ValueError(f"Token inválido: {token}")
 
     if len(pilha) == 1:
         resultado = pilha[0]
 
-        # histórico não poluído por comandos de memória ou consulta
         if "MEM" not in tokens and "RES" not in tokens:
             historico.append(resultado)
-
         return resultado
 
     elif len(pilha) == 0:
         return None
 
     else:
-        raise ValueError("Erro! Expressão inválida")
+        raise ValueError("Erro! Expressão inválida, sobram valores perdidos na pilha")
 
 
 def parenteses_aninhados(tokens):
@@ -110,7 +114,7 @@ def parenteses_aninhados(tokens):
     }
 
     for token in tokens:
-        if token.lstrip('-').replace('.', '', 1).isdigit() or (token.isalpha() and len(token) == 1):
+        if token.lstrip('-').replace('.', '', 1).isdigit() or (token.isalpha() and len(token) == 1) or token.isupper():
             saida.append(token)
 
         elif token in precedencia:
@@ -181,6 +185,26 @@ def rodar_testes_e_salvar():
         rpn = parenteses_aninhados(["(", "2", "+", "3", ")", "*", "4"])
         assert executar_expressao(rpn, memoria, historico) == 20
         log.append("(2+3)*4 = 20 OK")
+
+        # divisão inteira
+        res7 = executar_expressao(["10", "3", "//"], memoria, historico)
+        assert res7 == 3.0
+        log.append("10 3 // = 3 OK")
+
+        # resto de divisao
+        res8 = executar_expressao(["10", "3", "%"], memoria, historico)
+        assert res8 == 1.0
+        log.append("10 3 % = 1 OK")
+
+        # potenciacao
+        res9 = executar_expressao(["2", "3", "^"], memoria, historico)
+        assert res9 == 8.0
+        log.append("2 3 ^ = 8 OK")
+
+        # longa
+        executar_expressao(["100", "VARIAVEL", "MEM"], memoria, historico)
+        assert memoria.get("VARIAVEL") == 100.0
+        log.append("100 VARIAVEL MEM = 100 OK")
 
         resultado_final = "Todos os testes passaram!"
 
