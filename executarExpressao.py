@@ -12,7 +12,7 @@ def executar_expressao(tokens, memoria, historico):
         if token in ['+', '-', '*', '/', '//', '%', '^']:
             if len(pilha) < 2:
                 raise ValueError(f"Erro! operador '{token}' precisa de 2 valores")
-
+            
             b = pilha.pop()
             a = pilha.pop()
 
@@ -46,7 +46,8 @@ def executar_expressao(tokens, memoria, historico):
 
             nome = tokens[i - 1]
 
-            if not (nome.isalpha() and len(nome) == 1):
+            # aceita qualquer palavra maiuscula
+            if not nome.isupper():
                 raise ValueError("Erro! Nome inválido")
 
             valor = pilha.pop()
