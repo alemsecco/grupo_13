@@ -83,62 +83,15 @@ def parseExpressao(linha): # recebe uma linha de texto e retorna um vetor de tok
         tokens.append(token)
     if parenteses != 0:
         raise ValueError("Parênteses não balanceados")
-    validarContexto(tokens)
     return tokens
-
-# validação de contexto sintático (após tokenização)
-def validarContexto(tokens):
-    def tipo(token):
-        if token in ['+', '-', '*', '/', '//', '%', '^']:
-            return 'operador'
-        if token == '(' or token == ')':
-            return 'parentese'
-        if token.replace('.', '', 1).isdigit():
-            return 'numero'
-        if token.isupper():
-            return 'comando'
-        return 'desconhecido'
-
-    if not tokens:
-        raise ValueError('Expressão vazia')
-
-    first_tipo = tipo(tokens[0])
-    if first_tipo == 'operador' and tokens[0] not in ['+', '-']:
-        raise ValueError('Expressão não pode iniciar com operador')
-
-    if tipo(tokens[-1]) == 'operador':
-        raise ValueError('Expressão não pode terminar com operador')
-
-    prev_tipo = None
-    for tok in tokens:
-        cur_tipo = tipo(tok)
-
-        if cur_tipo == 'desconhecido':
-            raise ValueError(f"Token desconhecido no contexto: {tok}")
-
-        # operadores consecutivos não são permitidos
-        if prev_tipo == 'operador' and cur_tipo == 'operador':
-            raise ValueError('Dois operadores consecutivos não são permitidos')
-
-        # números ou parênteses consecutivos sem operador não são permitidos
-        # (comando+comando é permitido como RES MEM / RES VAR)
-        if prev_tipo in ['numero', ')'] and cur_tipo in ['numero', 'comando', '(']:
-            raise ValueError('Operador esperado entre operandos')
-
-        # não permitir operador imediatamente após '('
-        if prev_tipo == '(' and cur_tipo == 'operador' and tok not in ['+', '-']:
-            raise ValueError('Operador inválido após parêntese aberto')
-
-        prev_tipo = cur_tipo
-
 
 # testes + escrita de resultados em arquivo
 def testeParseExpressao():
     log_lines = []
     try:
         # expressões válidas
-        assert parseExpressao("3.14 + 2 * (1 - 5)") == ['3.14', '+', '2', '*', '(', '1', '-', '5', ')']
-        log_lines.append("EXPRESSÃO: 3.14 + 2 * (1 - 5)")
+        assert parseExpressao("(3.14 2 + (1 5 -) * )") == ['(', '3.14', '2', '+', '(', '1', '5', '-', ')', '*', ')']
+        log_lines.append("EXPRESSÃO: (3.14 2 + (1 5 -) *)")
         log_lines.append("Teste expressão válida: OK")
         assert parseExpressao("RES MEM") == ['RES', 'MEM']
         log_lines.append("EXPRESSÃO: RES MEM")
@@ -157,53 +110,35 @@ def testeParseExpressao():
             log_lines.append("Teste rejeição de minúsculas: OK")
         try:
             # teste para número malformado (mais de um ponto decimal)
-            parseExpressao("3.14.5 + 2")
+            parseExpressao("3.14.5 2 +")
             raise AssertionError("Esperava ValueError para número malformado")
         except ValueError as e:
             assert str(e) == "Número malformado: 3.14.5"
-            log_lines.append("EXPRESSÃO: 3.14.5 + 2")
+            log_lines.append("EXPRESSÃO: 3.14.5 2 +")
             log_lines.append("Teste número malformado: OK")
         try:
             # teste para token inválido
-            parseExpressao("3.14 + @")
+            parseExpressao("3.14 @ +")
             raise AssertionError("Esperava ValueError para token inválido")
         except ValueError as e:
             assert str(e) == "Token inválido: @"
-            log_lines.append("EXPRESSÃO: 3.14 + @")
+            log_lines.append("EXPRESSÃO: 3.14 @ +")
             log_lines.append("Teste token inválido: OK")
         # teste parenteses não balanceados
         try:            
-            parseExpressao("((3 + 2) + (1 - 5)")
+            parseExpressao("((3 2 +) (1 5 -) +")
             raise AssertionError("Esperava ValueError para parênteses não balanceados")
         except ValueError as e:
             assert str(e) == "Parênteses não balanceados"
-            log_lines.append("EXPRESSÃO: ((3 + 2) + (1 - 5)")
+            log_lines.append("EXPRESSÃO: ((3 2 +) (1 5 -) +")
             log_lines.append("Teste parênteses não balanceados: OK")
         try:
-            parseExpressao("3 + 2)")
+            parseExpressao("3 2 +)")
             raise AssertionError("Esperava ValueError para parêntese extra fechado")
         except ValueError as e:
             assert "abertura correspondente" in str(e)
-            log_lines.append("EXPRESSÃO: 3 + 2)")
+            log_lines.append("EXPRESSÃO: 3 2 +)")
             log_lines.append("Teste parêntese extra fechado: OK")
-
-        # testes de contexto para operadores consecutivos e operandos consecutivos
-        try:
-            parseExpressao("3 + * 4")
-            raise AssertionError("Esperava ValueError para operadores consecutivos")
-        except ValueError as e:
-            assert "Dois operadores consecutivos" in str(e)
-            log_lines.append("EXPRESSÃO: 3 + * 4")
-            log_lines.append("Teste operadores consecutivos: OK")
-
-        try:
-            parseExpressao("3 4")
-            raise AssertionError("Esperava ValueError para operandos consecutivos")
-        except ValueError as e:
-            assert "Operador esperado entre operandos" in str(e)
-            log_lines.append("EXPRESSÃO: 3 4")
-            log_lines.append("Teste operandos consecutivos: OK")
-
         resultado = "Todos os testes passaram!"
     except AssertionError as e:
         resultado = f"Falha nos testes: {e}"
@@ -222,6 +157,7 @@ def testeParseExpressao():
     
 if __name__ == "__main__": 
     testeParseExpressao()
+    
 
 
 

@@ -71,4 +71,4 @@ def testar():
         except Exception as e:
             print(f"{tokens} → ERRO: {e}")
 
-testar()
+#testar()
