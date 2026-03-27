@@ -214,7 +214,7 @@ def rodar_testes_e_salvar():
         resultado_final = f"Erro: {traceback.format_exc()}"
         log.append("Ocorreu um erro durante a execução.")
 
-    with open("resultado_testes.txt", "w", encoding="utf-8") as f:
+    with open("ultimo_teste_executarExpressao.txt", "w", encoding="utf-8") as f:
         for linha in log:
             f.write(linha + "\n")
         f.write(resultado_final)
