@@ -2,45 +2,38 @@
 # Mariana de Castro @maricastroo
 # Grupo 13
 
-"""
-Implementar parseExpressao(std::string linha, std::vector<std::string>& _tokens_) (ou equivalente em Python/C) para analisar uma linha de expressão RPN e extrair tokens.
 
-Implementar o analisador léxico usando Autômatos Finitos Determinísticos (AFDs), com cada estado como uma função (ex.: estadoNumero, estadoOperador, estadoParenteses).
+# Autômatos Finitos Determinísticos
+def estadoInicial(linha, i):
+    if linha[i].isdigit() or linha[i] == '.':
+        return estadoNumero
+    if linha[i] in '+-*%^':
+        return estadoOperador
+    if linha[i] == '/':
+        return estadoDivisao
+    if linha[i] in '()':
+        return estadoParenteses
+    if linha[i].isalpha():
+        return estadoComando
+    raise ValueError(f"Token inválido: {linha[i]}")
 
-Validar tokens:
-
-Números reais (ex.: 3.14) usando ponto como separador decimal;
-Operadores (+, -, *, /, %, ^);
-Comandos especiais (RES, MEM) e parênteses;
-Detectar erros como números malformados (ex.: 3.14.5) ou tokens inválidos;
-Criar funções de teste para o analisador léxico, cobrindo entradas válidas e inválidas
-Tarefas Específicas:
-
-Escrever parseExpressao para dividir a linha em tokens usando um Autômato Finito Determinístico;
-Interface:
-
-Recebe uma linha de texto e retorna um vetor de tokens;
-Fornece tokens válidos para executarExpressao. 
-A palavra parser usada neste texto deve ser interpretada em seu sentido mais amplo: percorrer, varrer, um texto ou uma coleção de dados. Neste caso, refere-se o processo de análise léxica. O uso de expressões regulares, ou das bibliotecas de expressões regulares disponíveis em Python, C ou C++, para a implementação do analisador léxico, é proibido e resultará no zeramento do trabalho.
-"""
-
-def estadoNumero(linha, i):
+def estadoNumero(linha, i): # recebe a linha e o índice atual, extrai um número (inteiro ou real) e retorna o número e o novo índice
     num = linha[i]
     i += 1
-    while i < len(linha) and (linha[i].isdigit() or linha[i] == '.'):
+    while i < len(linha) and (linha[i].isdigit() or linha[i] == '.'): # continua enquanto for dígito ou ponto decimal
         num += linha[i]
         i += 1
-    if num.count('.') > 1:
+    if num.count('.') > 1: # verifica se o número tem mais de um ponto decimal -> malformado
         raise ValueError(f"Número malformado: {num}")
     return num, i
 
-def estadoOperador(linha, i):
+def estadoOperador(linha, i): # recebe a linha e o índice atual, extrai um operador e retorna o operador e o novo índice
     return linha[i], i + 1 
 
-def estadoParenteses(linha, i):
+def estadoParenteses(linha, i): # recebe a linha e o índice atual, extrai um parêntese e retorna o parêntese e o novo índice
     return linha[i], i + 1
 
-def estadoComando(linha, i):
+def estadoComando(linha, i): # recebe a linha e o índice atual, extrai um comando (RES ou MEM) e retorna o comando e o novo índice
     cmd = linha[i]
     i += 1
     while i < len(linha) and linha[i].isalpha():
@@ -50,39 +43,37 @@ def estadoComando(linha, i):
         return cmd, i
     else:
         raise ValueError(f"Token inválido: {cmd}")
+    
+def estadoDivisao(linha, i): # recebe a linha e o índice atual, extrai um operador de divisão (/, //) e retorna o operador e o novo índice
+    if linha[i] == '/':
+        if i + 1 < len(linha) and linha[i + 1] == '/':
+            return '//', i + 2
+        else:
+            return '/', i + 1
+    raise ValueError(f"Token inválido: {linha[i]}")
 
-def parseExpressao(linha):
+# parseExpressão 
+def parseExpressao(linha): # recebe uma linha de texto e retorna um vetor de tokens
     tokens = []
     i = 0
     while i < len(linha):
         if linha[i].isspace():
             i += 1
             continue
-        elif linha[i].isdigit() or linha[i] == '.':
-            token, i = estadoNumero(linha, i)
-            tokens.append(token)
-        elif linha[i] in '+-*/%^':
-            token, i = estadoOperador(linha, i)
-            tokens.append(token)
-        elif linha[i] in '()':
-            token, i = estadoParenteses(linha, i)
-            tokens.append(token)
-        elif linha[i].isalpha():
-            token, i = estadoComando(linha, i)
-            tokens.append(token)
-        else:
-            raise ValueError(f"Token inválido: {linha[i]}")
+        estado = estadoInicial(linha, i)
+        token, i = estado(linha, i) # chama o estado atual para extrair o token e atualizar o índice
+        tokens.append(token)
     return tokens
 
 # Testes
 def testeParseExpressao():
-    assert parseExpressao("3.14 + 2 * (1 - 5)") == ['3.14', '+', '2', '*', '(', '1', '-', '5', ')']
-    assert parseExpressao("RES MEM") == ['RES', 'MEM']
+    assert parseExpressao("3.14 + 2 * (1 - 5)") == ['3.14', '+', '2', '*', '(', '1', '-', '5', ')'] # teste com expressão válida
+    assert parseExpressao("RES MEM") == ['RES', 'MEM'] # teste com comandos especiais
     try:
-        parseExpressao("3.14.5 + 2")
+        parseExpressao("3.14.5 + 2") # teste com número malformado
     except ValueError as e:
         assert str(e) == "Número malformado: 3.14.5"
-    try:        parseExpressao("3.14 + @")
+    try:        parseExpressao("3.14 + @") # teste com token inválido
     except ValueError as e:
         assert str(e) == "Token inválido: @"
     print("Todos os testes passaram!")
