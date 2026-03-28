@@ -1,6 +1,7 @@
 # Analisador Léxico
-Alex Menegatti Secco (@alemsecco)
-Mariana de Castro (@maricastroo)
+Alex Menegatti Secco ([@alemsecco](https://github.com/alemsecco))
+
+Mariana de Castro ([@maricastroo](https://github.com/maricastroo))
 
 Este projeto foi elaborado para a disciplina de Construção de Interpretadores do curso de Bacharelado de Ciência da Computação na PUCPR, ministrada pelo professor Frank Coelho de Alcantara. O projeto é a primeira fase da construção de um compilador.
 
@@ -12,9 +13,6 @@ O projeto possui essencialmente quatro partes.
 1. Implementação do analisador léxico usando Autômatos Finitos Determinísticos (AFDs), com cada estado como uma função (estadoNumero, estadoOperador, estadoParenteses, etc.). 
 2. Implementação de uma função parseExpressao() que analisa uma linha de uma expressão RPN e extrai os tokens. Essa função divide a linha em tokens utilizando AFDs.
 3. Validação de tokens:
-    - Números reais, usando ponto como separador decimal;
-    - Operadores (+, -, *, /, %, ^);
-    - Comandos especiais (RES, MEM) e parênteses;
     - Números reais, usando ponto como separador decimal;
     - Operadores (+, -, *, /, %, ^);
     - Comandos especiais (RES, MEM) e parênteses;
@@ -41,8 +39,8 @@ Interface:
 
 ## Parte 3 - gerarAssembly e Leitura de Arquivo
 1. Teste de expressões RPN.
-2. Implementação da função gerarAssembly(), que recebe o vetor de tokens gerado pelo analisador léxico e traduz para Assembly ARMv7, processando expressões puramente na FPU (Double 64-bits)
-3. Implementação de comunicação de I/O em hardware (MMIO), convertendo o resultado final de cada linha e mapeando-o para acender os LEDs Vermelhos (LEDR) da placa DE1-SoC no endereço 0xFF200000
+2. Implementação da função gerarAssembly(), que recebe o vetor de tokens gerado pelo analisador léxico e traduz para Assembly ARMv7, processando expressões puramente na FPU (Double 64-bits).
+3. Implementação de comunicação de I/O em hardware (MMIO), convertendo o resultado final de cada linha e mapeando-o para acender os LEDs Vermelhos (LEDR) da placa DE1-SoC no endereço 0xFF200000.
 4. Implementação da função lerArquivo() que lê o arquivo de entrada.
 5. Criação de funções de teste para validar as outras funções implementadas:
     - Testes com arquivos contendo 10 linhas, incluindo expressões aninhadas e comandos especiais;
