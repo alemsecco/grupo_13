@@ -1,6 +1,7 @@
 # Analisador Léxico
-Alex Menegatti Secco (@alemsecco)
-Mariana de Castro (@maricastroo)
+Alex Menegatti Secco ([@alemsecco](https://github.com/alemsecco))
+
+Mariana de Castro ([@maricastroo](https://github.com/maricastroo))
 
 Este projeto foi elaborado para a disciplina de Construção de Interpretadores do curso de Bacharelado de Ciência da Computação na PUCPR, ministrada pelo professor Frank Coelho de Alcantara. O projeto é a primeira fase da construção de um compilador.
 
@@ -10,7 +11,7 @@ O projeto possui essencialmente quatro partes.
 
 ## Parte 1 - parseExpressao e Analisador Léxico com Autômato Finito Determinístico
 1. Implementação do analisador léxico usando Autômatos Finitos Determinísticos (AFDs), com cada estado como uma função (estadoNumero, estadoOperador, estadoParenteses, etc.). 
-2. Implementação de uma função parseExpressao() que analisa uma linha de uma expressão RPN e extrai os tokens. Essa função divide a linha em tokens utilizando AFDs.
+2. Implementação de uma função parseExpressao(linha) que analisa uma linha de uma expressão RPN e extrai os tokens. Essa função divide a linha em tokens utilizando AFDs.
 3. Validação de tokens:
     - Números reais, usando ponto como separador decimal;
     - Operadores (+, -, *, /, %, ^);
@@ -28,7 +29,7 @@ Interface:
 ## Parte 2 - executarExpressao e Gerenciamento de Memória
 1. Teste dos AFDs com várias entradas.
 2. Criação de função para lidar com parênteses aninhados para poder gerar as expressões em Assembly.
-3. Implementação da função executarExpressao() mapeando e gerenciando múltiplas variáveis na memória.
+3. Implementação da função executarExpressao(tokens, memoria, historico) mapeando e gerenciando múltiplas variáveis na memória.
 4. Gerenciamento da memória MEM para comandos (V MEM) e (MEM).
 5. Manutenção de histórico de resultados que suportam (N RES).
 6. Criação de funções de teste validando a execução de expressões e comandos especiais:
@@ -42,8 +43,8 @@ Interface:
 
 ## Parte 3 - gerarAssembly e Leitura de Arquivo
 1. Teste de expressões RPN.
-2. Implementação da função gerarAssembly(), que recebe o vetor de tokens gerado pelo analisador léxico e traduz para Assembly ARMv7, tanto para expressões RPN quanto para comandos especiais.
-3. Implementação da função lerArquivo() que lê o arquivo de entrada.
+2. Implementação da função gerarAssembly(todas_linhas_rpn), que recebe o vetor de tokens gerado pelo analisador léxico e traduz para Assembly ARMv7, tanto para expressões RPN quanto para comandos especiais.
+3. Implementação da função lerArquivo(nomeArquivo) que lê o arquivo de entrada.
 4. Criação de funções de teste para validar as outras funções implementadas:
     - Testes com arquivos contendo 10 linhas, incluindo expressões aninhadas e comandos especiais;
     - Verificação de erros de abertura de arquivo, exibindo mensagens claras.
@@ -53,7 +54,7 @@ Interface:
 - gerarAssembly produz código Assembly.
 
 ## Parte 4 - exibirResultados, Interface do Usuário e Testes
-1. Implementação da função exibirResultados(), que exibe os resultados das expressões de forma clara.
+1. Implementação da função exibirResultados(programa_rpn, memoria, historico), que exibe os resultados das expressões de forma clara.
 2. Implementação e gerenciamento da interface do main, chamando as funções lerArquivo, parseExpressao, executarExpressao, e exibirResultados e fazendo a leitura de argumento na linha de comando.
 3. Correção de eventuais problemas de entrada e criação de funções de teste para validar a saída e o comportamento do programa.
 4. Teste utilizando arquivos fornecidos, verificando saídas para expressões simples e complexas;
