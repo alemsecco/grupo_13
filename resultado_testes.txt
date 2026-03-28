@@ -1,7 +1,0 @@
-3.14 2.0 + = 5.14 OK
-3.14.5 2.0 + (inválido) OK
-MEM X = 10 OK
-1 RES = -3 OK
-2 RES = 9 OK
-(2+3)*4 = 20 OK
-Todos os testes passaram!

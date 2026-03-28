@@ -177,18 +177,23 @@ def lerArquivo(nomeArquivo):
         print(f"ERRO FATAL: Não foi possível ler o arquivo '{nomeArquivo}'. Detalhes: {e}")
         return []
 
-# testes
+# testes gerando txt com a ultima execução
 def testarGerarAssembly():
     tokens = ["3.14", "2.0", "+", "RES", "5.0", "MEM"]
     assembly = gerarAssembly(tokens)
     print(assembly)
     print('--- \n')
+    with open("ultima_exec_gerarAssembly.txt", "w") as f:
+        f.write(assembly)
 
 def testarLerArquivo():
-    nomeArquivo = "teste.txt"
+    nomeArquivo = "teste1.txt"
     linhas = lerArquivo(nomeArquivo)
     for linha in linhas:
         print(linha)
+    with open("ultima_exec_lerArquivo.txt", "w") as f:
+        for linha in linhas:
+            f.write(linha + "\n")
 
 if __name__ == "__main__":
     testarGerarAssembly()

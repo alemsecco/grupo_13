@@ -9,6 +9,7 @@
     num_4: .double 3.0
     num_5: .double 4.0
     num_6: .double 5.0
+    var_MEM: .float 0.0
     num_7: .double 2
     num_8: .double 5.8
     num_9: .double 2.0
@@ -95,6 +96,10 @@ _start:
     ldr r0, =num_6
     vldr s0, [r0]
     vpush {s0}
+    vpop {s0}               @ Pega valor para salvar
+    ldr r0, =var_MEM
+    vstr s0, [r0]             @ Salva em MEM
+    vpush {s0}              @ Mantem na pilha
     @ --- Salva no historico ---
     vpop {s0}                   @ Pega resultado final
     ldr r1, =contador_historico
@@ -110,6 +115,18 @@ _start:
     @ --- Linha 4 ---
     ldr r0, =num_7
     vldr s0, [r0]
+    vpush {s0}
+    @ --- Comando RES ---
+    vpop {s0}               @ Pega o 'N' (em float)
+    vcvt.s32.f32 s0, s0     @ Converte N pra inteiro
+    vmov r1, s0             @ Move N para r1
+    ldr r2, =contador_historico
+    ldr r2, [r2]            @ r2 = linhas executadas
+    sub r2, r2, r1          @ r2 = indice (total - N)
+    lsl r2, r2, #2          @ Multiplica por 4 bytes
+    ldr r0, =historico
+    add r0, r0, r2          @ Endereco alvo
+    vldr s0, [r0]           @ Carrega o resultado antigo
     vpush {s0}
     @ --- Salva no historico ---
     vpop {s0}                   @ Pega resultado final
@@ -285,6 +302,9 @@ loop_pot_fim_0:
     str r2, [r1]                
 
     @ --- Linha 10 ---
+    ldr r0, =var_MEM
+    vldr s0, [r0]             @ Le de MEM
+    vpush {s0}
     ldr r0, =num_22
     vldr s0, [r0]
     vpush {s0}
@@ -294,6 +314,18 @@ loop_pot_fim_0:
     vpush {s2}              @ Devolve pra pilha
     ldr r0, =num_23
     vldr s0, [r0]
+    vpush {s0}
+    @ --- Comando RES ---
+    vpop {s0}               @ Pega o 'N' (em float)
+    vcvt.s32.f32 s0, s0     @ Converte N pra inteiro
+    vmov r1, s0             @ Move N para r1
+    ldr r2, =contador_historico
+    ldr r2, [r2]            @ r2 = linhas executadas
+    sub r2, r2, r1          @ r2 = indice (total - N)
+    lsl r2, r2, #2          @ Multiplica por 4 bytes
+    ldr r0, =historico
+    add r0, r0, r2          @ Endereco alvo
+    vldr s0, [r0]           @ Carrega o resultado antigo
     vpush {s0}
     vpop {s1}               @ Tira B
     vpop {s0}               @ Tira A
