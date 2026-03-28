@@ -269,6 +269,18 @@ loop_pot_fim_0:
     ldr r0, =num_6
     vldr s0, [r0]
     vpush {s0}
+    @ --- Comando RES ---
+    vpop {s0}               @ Pega o 'N' (em float)
+    vcvt.s32.f32 s0, s0     @ Converte N pra inteiro
+    vmov r1, s0             @ Move N para r1
+    ldr r2, =contador_historico
+    ldr r2, [r2]            @ r2 = linhas executadas
+    sub r2, r2, r1          @ r2 = indice (total - N)
+    lsl r2, r2, #2          @ Multiplica por 4 bytes
+    ldr r0, =historico
+    add r0, r0, r2          @ Endereco alvo
+    vldr s0, [r0]           @ Carrega o resultado antigo
+    vpush {s0}
     vpop {s1}               @ Tira B
     vpop {s0}               @ Tira A
     vmul.f64 s2, s0, s1      @ Calcula S2 = A op B
