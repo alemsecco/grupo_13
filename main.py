@@ -1,31 +1,63 @@
+import sys
 from parseExpressao import parseExpressao
 from gerarAssembly import gerarAssembly, lerArquivo
 from executarExpressao import executar_expressao, parenteses_aninhados
 
+def exibirResultados(programa_rpn, memoria, historico):
+
+    for idx, tokens_linha in enumerate(programa_rpn):
+        try:
+            # atualiza a memória e o histórico automaticamente a cada linha
+            res = executar_expressao(tokens_linha, memoria, historico)
+            
+            # imprime com uma casa decimal 
+            if res is not None:
+                print(f"Linha {idx + 1:02d}: {res:.1f}")
+            else:
+                print(f"Linha {idx + 1:02d}: (Sem retorno)")
+
+        except Exception as e:
+            # em caso de erro, avisa a linha e o motivo
+            print(f"Linha {idx + 1:02d}: ERRO -> {str(e)}")
+            # adiciona 0.0 no histórico para não perder o índice do RES
+            historico.append(0.0)
 
 def main():
-    nome_arquivo = "teste1.txt"
+    if len(sys.argv) < 2:
+        print("Erro! python main.py nome_do_arquivo.txt")
+        return
+    
+    nome_arquivo = sys.argv[1]
     print(f"Iniciando compilador para ARMv7. Lendo arquivo '{nome_arquivo}'...\n")
     
-    # lê o arquivo
+    # le o arquivo
     linhas = lerArquivo(nome_arquivo)
     if not linhas:
-        return # para se deu erro na leitura
+        return # parar se der erro na leitura
         
     programa_rpn = []
+    memoria = {}
+    historico = []
     
-    # análise léxica (passa as linhas pela MEF)
+    # análise léxica 
     for linha in linhas:
-        tokens = parseExpressao(linha)
+        linha_limpa = linha.strip()
+        if not linha_limpa:
+            continue
+
+        tokens = parseExpressao(linha_limpa)
         tokens_rpn = parenteses_aninhados(tokens)
         programa_rpn.append(tokens_rpn)
-        print(f"Tokens lidos: {tokens_rpn}")
+
         
-    # geração de código
+    # programa roda a calculadora e atualiza memoria/historico
+    exibirResultados(programa_rpn, memoria, historico)
+
+    # gerando codigo assembly
     print("\nGerando Assembly ARMv7...")
     codigo_arm = gerarAssembly(programa_rpn)
     
-    # salva o arquivo final
+    # salva o arquivo 
     with open("saida_arm.s", "w") as f:
         f.write(codigo_arm)
         
