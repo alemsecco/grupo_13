@@ -11,7 +11,7 @@ O projeto possui essencialmente quatro partes.
 
 ## Parte 1 - parseExpressao e Analisador Léxico com Autômato Finito Determinístico
 1. Implementação do analisador léxico usando Autômatos Finitos Determinísticos (AFDs), com cada estado como uma função (estadoNumero, estadoOperador, estadoParenteses, etc.). 
-2. Implementação de uma função parseExpressao() que analisa uma linha de uma expressão RPN e extrai os tokens. Essa função divide a linha em tokens utilizando AFDs.
+2. Implementação de uma função parseExpressao(linha) que analisa uma linha de uma expressão RPN e extrai os tokens. Essa função divide a linha em tokens utilizando AFDs.
 3. Validação de tokens:
     - Números reais, usando ponto como separador decimal;
     - Operadores (+, -, *, /, %, ^);
@@ -25,7 +25,7 @@ Interface:
 
 ## Parte 2 - executarExpressao e Gerenciamento de Memória
 1. Teste dos AFDs com várias entradas.
-2. Implementação da função executarExpressao() mapeando e gerenciando múltiplas variáveis na memória, além de lidar com parênteses.
+2. Implementação da função executarExpressao(tokens, memoria, historico) mapeando e gerenciando múltiplas variáveis na memória, além de lidar com parênteses.
 3. Gerenciamento da memória MEM para comandos (V MEM) e (MEM).
 4. Manutenção de histórico de resultados que suportam (N RES).
 5. Criação de funções de teste validando a execução de expressões e comandos especiais:
@@ -39,9 +39,9 @@ Interface:
 
 ## Parte 3 - gerarAssembly e Leitura de Arquivo
 1. Teste de expressões RPN.
-2. Implementação da função gerarAssembly(), que recebe o vetor de tokens gerado pelo analisador léxico e traduz para Assembly ARMv7, processando expressões puramente na FPU (Double 64-bits).
+2. Implementação da função gerarAssembly(todas_linhas_rpn), que recebe o vetor de tokens gerado pelo analisador léxico e traduz para Assembly ARMv7, processando expressões puramente na FPU (Double 64-bits).
 3. Implementação de comunicação de I/O em hardware (MMIO), convertendo o resultado final de cada linha e mapeando-o para acender os LEDs Vermelhos (LEDR) da placa DE1-SoC no endereço 0xFF200000.
-4. Implementação da função lerArquivo() que lê o arquivo de entrada.
+4. Implementação da função lerArquivo(nomeArquivo) que lê o arquivo de entrada.
 5. Criação de funções de teste para validar as outras funções implementadas:
     - Testes com arquivos contendo 10 linhas, incluindo expressões aninhadas e comandos especiais;
     - Verificação de erros de abertura de arquivo, exibindo mensagens claras.
