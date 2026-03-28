@@ -1,9 +1,15 @@
-def executar_expressao(tokens, memoria, historico):
+# Alex Menegatti Secco @alemsecco
+# Mariana de Castro @maricastroo
+# Grupo 13
+
+def executarExpressao(tokens, memoria, historico):
     pilha = []
 
     for i, token in enumerate(tokens):
+        if token in ['(', ')']:
+            continue
 
-        # número
+        # número 
         if token.lstrip('-').replace('.', '', 1).isdigit():
             pilha.append(float(token))
             continue
@@ -95,6 +101,8 @@ def executar_expressao(tokens, memoria, historico):
 
         if "MEM" not in tokens and "RES" not in tokens:
             historico.append(resultado)
+        elif len(tokens) > 2: # se teve cálculo antes de chamar MEM ou RES, salva o resultado
+            historico.append(resultado)
         return resultado
 
     elif len(pilha) == 0:
@@ -102,46 +110,6 @@ def executar_expressao(tokens, memoria, historico):
 
     else:
         raise ValueError("Erro! Expressão inválida, sobram valores perdidos na pilha")
-
-
-def parenteses_aninhados(tokens):
-    saida = []
-    operadores = []
-
-    precedencia = {
-        '+': 1, '-': 1,
-        '*': 2, '/': 2, '//': 2, '%': 2, '^': 3
-    }
-
-    for token in tokens:
-        if token.lstrip('-').replace('.', '', 1).isdigit() or (token.isalpha() and len(token) == 1) or token.isupper():
-            saida.append(token)
-
-        elif token in precedencia:
-            while (operadores and operadores[-1] != "(" and
-                   precedencia.get(operadores[-1], 0) >= precedencia[token]):
-                saida.append(operadores.pop())
-
-            operadores.append(token)
-
-        elif token == "(":
-            operadores.append(token)
-
-        elif token == ")":
-            while operadores and operadores[-1] != "(":
-                saida.append(operadores.pop())
-
-            if not operadores:
-                raise ValueError("Erro! Parênteses desbalanceados")
-
-            operadores.pop()
-
-    while operadores:
-        if operadores[-1] == "(":
-            raise ValueError("Erro! Parênteses desbalanceados")
-        saida.append(operadores.pop())
-
-    return saida
 
 
 def rodar_testes_e_salvar():
@@ -152,57 +120,58 @@ def rodar_testes_e_salvar():
         historico = []
 
         # (3.14 2.0 +) round para evitar erro de precisão float
-        res1 = executar_expressao(["3.14", "2.0", "+"], memoria, historico)
+        res1 = executarExpressao(["3.14", "2.0", "+"], memoria, historico)
         assert round(res1, 2) == 5.14
         log.append("3.14 2.0 + = 5.14 OK")
 
         # (3.14.5 2.0 +) ERRO
         try:
-            executar_expressao(["3.14.5", "2.0", "+"], memoria, historico)
+            executarExpressao(["3.14.5", "2.0", "+"], memoria, historico)
             log.append("Erro: 3.14.5 deveria ter falhado")
         except ValueError:
             log.append("3.14.5 2.0 + (inválido) OK")
 
         # MEM e variáveis
-        executar_expressao(["10", "X", "MEM"], memoria, historico)
-        assert executar_expressao(["X"], memoria, historico) == 10
+        executarExpressao(["10", "X", "MEM"], memoria, historico)
+        assert executarExpressao(["X"], memoria, historico) == 10
         log.append("MEM X = 10 OK")
 
         # Histórico (N RES)
         historico.clear()
-        executar_expressao(["4", "5", "+"], memoria, historico) # hist: [9.0]
-        executar_expressao(["2", "5", "-"], memoria, historico) # hist: [9.0, -3.0]
+        executarExpressao(["4", "5", "+"], memoria, historico) # hist: [9.0]
+        executarExpressao(["2", "5", "-"], memoria, historico) # hist: [9.0, -3.0]
 
-        res_res1 = executar_expressao(["1", "RES"], memoria, historico)
+        res_res1 = executarExpressao(["1", "RES"], memoria, historico)
         assert res_res1 == -3
         log.append("1 RES = -3 OK")
 
-        res_res2 = executar_expressao(["2", "RES"], memoria, historico)
+        res_res2 = executarExpressao(["2", "RES"], memoria, historico)
         assert res_res2 == 9
         log.append("2 RES = 9 OK")
 
-        # parênteses aninhados
-        rpn = parenteses_aninhados(["(", "2", "+", "3", ")", "*", "4"])
-        assert executar_expressao(rpn, memoria, historico) == 20
+        # expressão com parênteses
+        historico.clear()
+        rpn = ["2", "3", "+", "4", "*"] # equivalente a (2 + 3) * 4
+        assert executarExpressao(rpn, memoria, historico) == 20
         log.append("(2+3)*4 = 20 OK")
 
         # divisão inteira
-        res7 = executar_expressao(["10", "3", "//"], memoria, historico)
+        res7 = executarExpressao(["10", "3", "//"], memoria, historico)
         assert res7 == 3.0
         log.append("10 3 // = 3 OK")
 
         # resto de divisao
-        res8 = executar_expressao(["10", "3", "%"], memoria, historico)
+        res8 = executarExpressao(["10", "3", "%"], memoria, historico)
         assert res8 == 1.0
         log.append("10 3 % = 1 OK")
 
         # potenciacao
-        res9 = executar_expressao(["2", "3", "^"], memoria, historico)
+        res9 = executarExpressao(["2", "3", "^"], memoria, historico)
         assert res9 == 8.0
         log.append("2 3 ^ = 8 OK")
 
         # longa
-        executar_expressao(["100", "VARIAVEL", "MEM"], memoria, historico)
+        executarExpressao(["100", "VARIAVEL", "MEM"], memoria, historico)
         assert memoria.get("VARIAVEL") == 100.0
         log.append("100 VARIAVEL MEM = 100 OK")
 
@@ -214,7 +183,7 @@ def rodar_testes_e_salvar():
         resultado_final = f"Erro: {traceback.format_exc()}"
         log.append("Ocorreu um erro durante a execução.")
 
-    with open("ultimo_teste_executarExpressao.txt", "w", encoding="utf-8") as f:
+    with open("execucao/ultimo_teste_executarExpressao.txt", "w", encoding="utf-8") as f:
         for linha in log:
             f.write(linha + "\n")
         f.write(resultado_final)

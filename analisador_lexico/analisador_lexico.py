@@ -9,6 +9,9 @@ def estadoInicial(linha, i):
         return None # fim da linha, retorna None para indicar que não há mais tokens
     if linha[i].isspace():
         return estadoInicial # se for espaço, permanece no estado inicial para ignorar espaços
+    # tratar negativos: se é '-', e o próximo é dígito, vai pro estado de número
+    if linha[i] == '-' and i + 1 < len(linha) and linha[i+1].isdigit():
+        return estadoNumero
     if linha[i].isdigit() or linha[i] == '.':
         return estadoNumero
     if linha[i] in '+-*%^':
@@ -147,7 +150,7 @@ def testeParseExpressao():
         resultado = f"Erro inesperado nos testes: {e}"
         log_lines.append(resultado)
 
-    with open("ultima_exec_teste_parseExpressao.txt", "w", encoding="utf-8") as f:
+    with open("analisador_lexico/ultima_exec_teste_parseExpressao.txt", "w", encoding="utf-8") as f: 
         for linha in log_lines:
             f.write(linha + "\n")
         f.write(resultado + "\n")

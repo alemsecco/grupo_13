@@ -1,0 +1,214 @@
+.data
+    @ --- Variaveis e Constantes ---
+    contador_historico: .word 0        @ Guarda quantas linhas ja rodaram
+    historico: .space 800              @ Espaco para 100 resultados (8 bytes cada)
+    const_um: .double 1.0              @ Constante fixa para a potenciacao
+    base_leds: .word 0xFF200000        @ Endereco de hardware dos LEDs vermelhos
+    num_0: .double 3
+    num_1: .double 1
+    num_2: .double 4
+    num_3: .double 2
+    num_4: .double 0
+    var_R: .double 0.0
+    var_E: .double 0.0
+    var_S: .double 0.0
+    num_5: .double 5
+    num_6: .double 0
+    var_X: .double 0.0
+    var_M: .double 0.0
+
+.text
+.global _start
+_start:
+
+    @ --- Linha 1 ---
+    ldr r0, =num_0
+    vldr d0, [r0]
+    vpush {d0}
+    ldr r0, =num_1
+    vldr d0, [r0]
+    vpush {d0}
+    ldr r0, =num_2
+    vldr d0, [r0]
+    vpush {d0}
+    @ --- Salva no historico e Exibe nos LEDs ---
+    vpop {d0}                   @ Pega resultado final
+    @ 1. Imprime o valor inteiro nos LEDs vermelhos (Hardware I/O)
+    vcvt.s32.f64 s0, d0         @ Converte D0 para inteiro de 32bits
+    vmov r4, s0                 @ Move para R4
+    ldr r5, =base_leds          @ Carrega endereco dos LEDs
+    ldr r5, [r5]                @ Desreferencia
+    str r4, [r5]                @ Liga os LEDs correspondentes ao numero binario
+    @ 2. Salva no array de historico
+    ldr r1, =contador_historico
+    ldr r2, [r1]                @ r2 = linha atual
+    mov r3, r2                  
+    lsl r3, r3, #3              @ offset = linha * 8
+    ldr r0, =historico
+    add r0, r0, r3              
+    vstr d0, [r0]               @ Salva
+    add r2, r2, #1              @ Incrementa linha
+    str r2, [r1]                
+
+    @ --- Linha 2 ---
+    ldr r0, =num_3
+    vldr d0, [r0]
+    vpush {d0}
+    ldr r0, =num_4
+    vldr d0, [r0]
+    vpush {d0}
+    @ --- Salva no historico e Exibe nos LEDs ---
+    vpop {d0}                   @ Pega resultado final
+    @ 1. Imprime o valor inteiro nos LEDs vermelhos (Hardware I/O)
+    vcvt.s32.f64 s0, d0         @ Converte D0 para inteiro de 32bits
+    vmov r4, s0                 @ Move para R4
+    ldr r5, =base_leds          @ Carrega endereco dos LEDs
+    ldr r5, [r5]                @ Desreferencia
+    str r4, [r5]                @ Liga os LEDs correspondentes ao numero binario
+    @ 2. Salva no array de historico
+    ldr r1, =contador_historico
+    ldr r2, [r1]                @ r2 = linha atual
+    mov r3, r2                  
+    lsl r3, r3, #3              @ offset = linha * 8
+    ldr r0, =historico
+    add r0, r0, r3              
+    vstr d0, [r0]               @ Salva
+    add r2, r2, #1              @ Incrementa linha
+    str r2, [r1]                
+
+    @ --- Linha 3 ---
+    vpop {d1}               @ Tira B
+    vpop {d0}               @ Tira A
+    vadd.f64 d2, d0, d1      @ Calcula S2 = A op B
+    vpush {d2}              @ Devolve pra pilha
+    @ --- Salva no historico e Exibe nos LEDs ---
+    vpop {d0}                   @ Pega resultado final
+    @ 1. Imprime o valor inteiro nos LEDs vermelhos (Hardware I/O)
+    vcvt.s32.f64 s0, d0         @ Converte D0 para inteiro de 32bits
+    vmov r4, s0                 @ Move para R4
+    ldr r5, =base_leds          @ Carrega endereco dos LEDs
+    ldr r5, [r5]                @ Desreferencia
+    str r4, [r5]                @ Liga os LEDs correspondentes ao numero binario
+    @ 2. Salva no array de historico
+    ldr r1, =contador_historico
+    ldr r2, [r1]                @ r2 = linha atual
+    mov r3, r2                  
+    lsl r3, r3, #3              @ offset = linha * 8
+    ldr r0, =historico
+    add r0, r0, r3              
+    vstr d0, [r0]               @ Salva
+    add r2, r2, #1              @ Incrementa linha
+    str r2, [r1]                
+
+    @ --- Linha 4 ---
+    ldr r0, =var_R
+    vldr d0, [r0]             @ Le de R
+    vpush {d0}
+    ldr r0, =var_E
+    vldr d0, [r0]             @ Le de E
+    vpush {d0}
+    vpop {d0}               @ Pega valor para salvar
+    ldr r0, =var_S
+    vstr d0, [r0]             @ Salva em S
+    vpush {d0}              @ Mantem na pilha
+    @ --- Salva no historico e Exibe nos LEDs ---
+    vpop {d0}                   @ Pega resultado final
+    @ 1. Imprime o valor inteiro nos LEDs vermelhos (Hardware I/O)
+    vcvt.s32.f64 s0, d0         @ Converte D0 para inteiro de 32bits
+    vmov r4, s0                 @ Move para R4
+    ldr r5, =base_leds          @ Carrega endereco dos LEDs
+    ldr r5, [r5]                @ Desreferencia
+    str r4, [r5]                @ Liga os LEDs correspondentes ao numero binario
+    @ 2. Salva no array de historico
+    ldr r1, =contador_historico
+    ldr r2, [r1]                @ r2 = linha atual
+    mov r3, r2                  
+    lsl r3, r3, #3              @ offset = linha * 8
+    ldr r0, =historico
+    add r0, r0, r3              
+    vstr d0, [r0]               @ Salva
+    add r2, r2, #1              @ Incrementa linha
+    str r2, [r1]                
+
+    @ --- Linha 5 ---
+    ldr r0, =num_5
+    vldr d0, [r0]
+    vpush {d0}
+    ldr r0, =num_6
+    vldr d0, [r0]
+    vpush {d0}
+    @ --- Salva no historico e Exibe nos LEDs ---
+    vpop {d0}                   @ Pega resultado final
+    @ 1. Imprime o valor inteiro nos LEDs vermelhos (Hardware I/O)
+    vcvt.s32.f64 s0, d0         @ Converte D0 para inteiro de 32bits
+    vmov r4, s0                 @ Move para R4
+    ldr r5, =base_leds          @ Carrega endereco dos LEDs
+    ldr r5, [r5]                @ Desreferencia
+    str r4, [r5]                @ Liga os LEDs correspondentes ao numero binario
+    @ 2. Salva no array de historico
+    ldr r1, =contador_historico
+    ldr r2, [r1]                @ r2 = linha atual
+    mov r3, r2                  
+    lsl r3, r3, #3              @ offset = linha * 8
+    ldr r0, =historico
+    add r0, r0, r3              
+    vstr d0, [r0]               @ Salva
+    add r2, r2, #1              @ Incrementa linha
+    str r2, [r1]                
+
+    @ --- Linha 6 ---
+    ldr r0, =var_X
+    vldr d0, [r0]             @ Le de X
+    vpush {d0}
+    @ --- Salva no historico e Exibe nos LEDs ---
+    vpop {d0}                   @ Pega resultado final
+    @ 1. Imprime o valor inteiro nos LEDs vermelhos (Hardware I/O)
+    vcvt.s32.f64 s0, d0         @ Converte D0 para inteiro de 32bits
+    vmov r4, s0                 @ Move para R4
+    ldr r5, =base_leds          @ Carrega endereco dos LEDs
+    ldr r5, [r5]                @ Desreferencia
+    str r4, [r5]                @ Liga os LEDs correspondentes ao numero binario
+    @ 2. Salva no array de historico
+    ldr r1, =contador_historico
+    ldr r2, [r1]                @ r2 = linha atual
+    mov r3, r2                  
+    lsl r3, r3, #3              @ offset = linha * 8
+    ldr r0, =historico
+    add r0, r0, r3              
+    vstr d0, [r0]               @ Salva
+    add r2, r2, #1              @ Incrementa linha
+    str r2, [r1]                
+
+    @ --- Linha 7 ---
+    ldr r0, =var_M
+    vldr d0, [r0]             @ Le de M
+    vpush {d0}
+    ldr r0, =var_E
+    vldr d0, [r0]             @ Le de E
+    vpush {d0}
+    vpop {d0}               @ Pega valor para salvar
+    ldr r0, =var_M
+    vstr d0, [r0]             @ Salva em M
+    vpush {d0}              @ Mantem na pilha
+    @ --- Salva no historico e Exibe nos LEDs ---
+    vpop {d0}                   @ Pega resultado final
+    @ 1. Imprime o valor inteiro nos LEDs vermelhos (Hardware I/O)
+    vcvt.s32.f64 s0, d0         @ Converte D0 para inteiro de 32bits
+    vmov r4, s0                 @ Move para R4
+    ldr r5, =base_leds          @ Carrega endereco dos LEDs
+    ldr r5, [r5]                @ Desreferencia
+    str r4, [r5]                @ Liga os LEDs correspondentes ao numero binario
+    @ 2. Salva no array de historico
+    ldr r1, =contador_historico
+    ldr r2, [r1]                @ r2 = linha atual
+    mov r3, r2                  
+    lsl r3, r3, #3              @ offset = linha * 8
+    ldr r0, =historico
+    add r0, r0, r3              
+    vstr d0, [r0]               @ Salva
+    add r2, r2, #1              @ Incrementa linha
+    str r2, [r1]                
+
+    @ --- Fim do Programa ---
+_fim:
+    b _fim                      @ Loop infinito para segurar o processador

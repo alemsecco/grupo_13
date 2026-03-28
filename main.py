@@ -1,14 +1,18 @@
+# Alex Menegatti Secco @alemsecco
+# Mariana de Castro @maricastroo
+# Grupo 13
+
 import sys
-from parseExpressao import parseExpressao
-from gerarAssembly import gerarAssembly, lerArquivo
-from executarExpressao import executar_expressao, parenteses_aninhados
+from analisador_lexico.analisador_lexico import parseExpressao
+from gerador_assembly.gerarAssembly import gerarAssembly, lerArquivo
+from execucao.executor import executarExpressao
 
 def exibirResultados(programa_rpn, memoria, historico):
 
     for idx, tokens_linha in enumerate(programa_rpn):
         try:
             # atualiza a memória e o histórico automaticamente a cada linha
-            res = executar_expressao(tokens_linha, memoria, historico)
+            res = executarExpressao(tokens_linha, memoria, historico)
             
             # imprime com uma casa decimal 
             if res is not None:
@@ -46,8 +50,7 @@ def main():
             continue
 
         tokens = parseExpressao(linha_limpa)
-        tokens_rpn = parenteses_aninhados(tokens)
-        programa_rpn.append(tokens_rpn)
+        programa_rpn.append(tokens)
 
         
     # programa roda a calculadora e atualiza memoria/historico
