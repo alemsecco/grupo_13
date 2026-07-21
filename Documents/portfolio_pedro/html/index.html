@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedro Secco</title>
+
+    <!-- Importando a EB Garamond do Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
+    
+    <!-- Linkando seu CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <!-- O conteúdo vai aqui -->
+    <header>
+        <h1 class="logo">Pedro Secco</h1>
+        <p class="subtitulo">Composer, Arranger & Guitarist</p>
+    </header>
+    <main>
+    <!-- Seção 1: Sobre -->
+    <section id="sobre" class="vh-100"> <!-- vh-100 para ocupar a tela toda inicial -->
+        <div class="slideshow-fotos" id="foto-sobre"></div>
+        <div class="conteudo-sobre">
+            <h1 class="titulo-secao">About</h1>
+            <p>Um pequeno texto de introdução sobre sua visão musical, influências e trabalho.</p>
+            <nav class="botoes-ancora">
+                <a href="#performances">Performances</a>
+                <a href="#arranjos">Arrangements</a>
+                <a href="#contato">Contact me</a>
+            </nav>
+        </div>
+    </section>
+
+    <!-- Seção 2: Performances -->
+    <section id="performances" class="secao-padding fundo-alternativo">
+        <h2 class="titulo-secao">Performances</h2>
+        <div class="grid-videos">
+            <!-- Os cards de vídeo vão aqui -->
+            <div class="video-card">
+                <iframe src="..." loading="lazy" frameborder="0" allowfullscreen></iframe>
+                <h3>Nome da Obra</h3>
+                <p>Compositor</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção 3: Arranjos e Composições -->
+    <section id="arranjos" class="secao-padding">
+        <h2 class="titulo-secao">Arrangements & Compositions</h2>
+        <div class="lista-arranjos" id="container-arranjos"></div>
+    </section>
+
+    <!-- Seção 4: Contato -->
+    <section id="contato" class="secao-padding text-center fundo-alternativo">
+        <h2 class="titulo-secao">Contact me</h2>
+        <div class="links-contato">
+            <a href="mailto:pesecco13@gmail.com">E-mail</a>
+            <a href="https://www.instagram.com/pedrosecco.music/" target="_blank">Instagram</a>
+        </div>
+    </section>
+    </main>
+    <!-- Rodapé -->
+    <footer>
+        <nav class="links-rodape">
+            <a href="#sobre">Sobre</a>
+            <a href="#performances">Performances</a>
+            <a href="#arranjos">Arrangements</a>
+        </nav>
+        <p class="copyright">© 2026 Alex Secco. Todos os direitos reservados.</p>
+        <button id="btn-topo">Back to top</button>
+    </footer>
+
+    <!-- Linkando seu JS no final do body -->
+    <script src="../js/index.js"></script>
+    
+</body>
+</html>
+

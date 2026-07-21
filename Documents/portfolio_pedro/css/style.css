@@ -1,0 +1,138 @@
+/* fonte local */
+@font-face {
+    font-family: 'Right Melody';
+    src: url('../assets/Right\ Mellody.woff2') format('woff2'); 
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+/* variáveis */
+:root {
+    --fonte-logo: 'Right Melody', cursive;
+    --fonte-texto: 'EB Garamond', serif;
+    
+    --off-white: #fafafa; 
+    --preto-grafite: #1A1A1A; 
+    --dourado: #e39b00;
+    --bordo: #570202;
+    --vermelho: #920808;
+    --vermelho-claro: #df9a8b;
+    --clarinho: #fff6f2;
+    --begezinho: #f3eed9;
+}
+
+/* reset básico de navegador */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--fonte-texto);
+    background-color: var(--clarinho);
+    color: var(--preto-grafite);
+    line-height: 1.6;
+    font-size: 18px; 
+    font-optical-sizing: auto;
+}
+
+header {
+    text-align: center;
+    padding: 100px 20px;
+}
+
+.logo {
+    font-family: var(--fonte-logo);
+    font-size: 5rem; 
+    font-weight: normal;
+    margin-bottom: 10px;
+    color: var(--bordo);
+}
+
+.subtitulo {
+    font-style: italic; 
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+}
+
+.fundo-alternativo {
+    background-color: var(--begezinho); /* p intercalar as seções */
+}
+
+.texto-destaque {
+    color: var(--dourado);
+}
+
+.titulo-secao {
+    color: var(--bordo);
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+}
+
+/* BOTÕES */
+.btn {
+    display: inline-block;
+    padding: 10px 24px;
+    border: 1px solid var(--bordo);
+    color: var(--bordo);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    background-color: var(--bordo);
+    color: var(--clarinho);
+}
+
+
+/* Organiza os arranjos em um Grid (lado a lado no PC, um embaixo do outro no celular) */
+.lista-arranjos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* cartão individual de cada arranjo */
+.item-arranjo {
+    background-color: var(--clarinho);
+    border: 1px solid var(--vermelho-claro);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease;
+}
+
+.item-arranjo:hover {
+    transform: translateY(-5px);
+}
+
+/* imagem da partitura */
+.imagem-partitura img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-bottom: 2px solid var(--dourado);
+}
+
+/* bloco de texto e player */
+.info-arranjo {
+    padding: 1.5rem;
+}
+
+.titulo-arranjo {
+    color: var(--bordo);
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+}
+
+.player-audio {
+    width: 100%;
+    margin-top: 1rem;
+    outline: none;
+}
